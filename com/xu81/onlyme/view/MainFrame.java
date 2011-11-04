@@ -7,9 +7,12 @@
 package com.xu81.onlyme.view;
 
 import java.awt.Color;
+import java.awt.Dialog.ModalExclusionType;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -127,6 +130,8 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
 
 	/** Creates new form MainFrame */
 	public MainFrame() {
+		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		initComponents();
 		// init sound
 		is = MainFrame.class.getResourceAsStream(CHIP_PATH);
@@ -178,8 +183,6 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
 		tv = new TimeView(lbTime);
 		tv.start();
 		
-		screenWidth = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-		screenHeight = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
 		rowsPerPage = (int)screenHeight/fontSize;
 		
 		jfc = new JFileChooser();
@@ -420,6 +423,8 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
 		jPopupMenu1.add(miQuit);
 
 		setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+		//set system icon
+		setIconImage(new javax.swing.ImageIcon(getClass().getResource("/res/onlyme_icon.png")).getImage());
 		setTitle("OnlyMe");
 		setBackground(new java.awt.Color(0, 0, 0));
 		setResizable(false);
@@ -539,6 +544,7 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
         		newOrCloseFile(NewOrClose.CLOSE, "退出程序前是否保存当前文件");
         	}
 		});
+        
 		//pack(); comment this code, if not can't use myWindow.setUndecorated(true)  raise ex:The frame is displayable.
 	}// </editor-fold>//GEN-END:initComponents
 
@@ -639,6 +645,8 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
 	private javax.swing.JMenuItem miUndo;
 	private javax.swing.JTextArea taMain;
 
+	
+	private HelpDialog helpDialog ;
 	/**
 	 * save current file
 	 * @return
@@ -716,6 +724,14 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
 				System.exit(0);
 			}
 		}
+	}
+	
+	private void showAboutFrame(boolean isShow){
+		if(helpDialog == null){
+			helpDialog = new HelpDialog(this, true);
+			helpDialog.setBounds((int)(screenWidth-676)/2, (int)(screenHeight-446)/2, 676, 446);
+		}
+		helpDialog.setVisible(isShow);
 	}
 	
 	/**
@@ -814,7 +830,7 @@ public class MainFrame extends javax.swing.JFrame implements ClipboardOwner {
 				}else if("Option".equals(an)){
 					
 				}else if("About".equals(an)){
-					
+					showAboutFrame(true);
 				}else if("Quit".equals(an)){
 					MainFrame.this.processWindowEvent(new WindowEvent(MainFrame.this, WindowEvent.WINDOW_CLOSING));
 				}
